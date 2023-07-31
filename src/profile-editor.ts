@@ -37,13 +37,14 @@ async function render(): Promise<void> {
 }
 
 async function inputValidation(textArea: HTMLTextAreaElement, maxBytes: number = 255): Promise<void> {
-    const input = textArea.value;
-    const bytes = new Blob([input]).size;
+    const input = textArea.value.trimEnd();
+    const rawBytes = new Blob([input]).size;
+    const lines = input.split('\n');
 
     const byteSizeChanged = new CustomEvent('byteSizeChanged', {
         detail: {
             input,
-            bytes,
+            bytes: rawBytes + lines.length - 1,
             maxBytes,
         },
     });
