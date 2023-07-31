@@ -2,7 +2,7 @@
     "name": "3dx-profile-gift-editor-enhancer",
     "extensionName": "3DX Chat - Profile / Gift Editor Enhancer",
     "description": "Enhance the amazing profile & gift editor by ColinDude",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "index.js",
     "scripts": {
         "build": "webpack --config webpack/webpack.config.js"
