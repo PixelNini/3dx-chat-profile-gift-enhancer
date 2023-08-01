@@ -8,7 +8,6 @@
             "48": "icon48.png"
         }
     },
-    "permissions": ["activeTab"],
     "content_scripts": [
         {
             "matches": ["https://status.3dxchat.net/profile-editor"],
