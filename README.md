@@ -1,8 +1,25 @@
 This extension is designed to work exclusively on the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page and is not active on any other sites. It will not interact with or affect any other web pages.
 
-Below are the instructions for installing the extension in Chrome and Firefox.
+Below are instructions for installing the extension in Chrome and Firefox.
 
-## Installation Guide
+## What Does This Extension Do?
+
+The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-left corner of the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page. This functionality aims to address the following problem:
+
+-   The existing character count often does not provide an accurate reflection, especially when using custom fonts or symbols that can be larger than a single byte.
+-   When pre-editing your gift in the editor with a custom font, you may still encounter issues when sending the gift in 3DX Chat even though you are within the allowed character range. This is because 3DX Chat imposes a byte limit of approximately 255. The extension's byte-counter ensures that your content will fit within this limit.
+
+### Screenshots
+
+#### Gift preview with custom fonts and with byte limit in range
+
+[OK](./demo/Screenshot%20-%20OK.jpg)
+
+#### Gift preview with custom fonts and with byte limit exceeded
+
+[ERROR](./demo/Screenshot%20-%20NOT%20OK.jpg)
+
+## Installation Guide (Local Installation Only !)
 
 ### For Google Chrome
 
@@ -28,7 +45,7 @@ Below are the instructions for installing the extension in Chrome and Firefox.
 #### Step 4: Verify the Installation
 
 1. You should now see the '3DX Chat Profile Gift Enhancer' extension listed in your extensions.
-2. Verify it's enabled and customize the settings as needed.
+2. Verify it's enabled and visit the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page, you should see the byte-counter once you clicked on `Gif preview`.
 
 ### For Firefox (Developer Edition Only)
 
@@ -53,7 +70,7 @@ Same as the Chrome instructions.
 
 ## Troubleshooting
 
-If you encounter any issues during installation, please [open an issue](https://github.com/PixelNini/3dx-chat-profile-gift-enhancer/issues) in this repository describing the problem, and we will do our best to assist you.
+If you encounter any issues during installation, please [open an issue](https://github.com/PixelNini/3dx-chat-profile-gift-enhancer/issues) in this repository describing the problem, and I will do my best to assist you.
 
 ## License
 
@@ -61,4 +78,4 @@ This project is licensed under the CC0 1.0 Universal (CC0 1.0) Public Domain Ded
 
 ## Contributing
 
-We welcome contributions! See the [CONTRIBUTING.md](CONTRIBUTING.md) file for how to get involved.
+I welcome contributions! See the [CONTRIBUTING.md](CONTRIBUTING.md) file for how to get involved.
