@@ -45,7 +45,7 @@ The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-l
 #### Step 4: Verify the Installation
 
 1. You should now see the '3DX Chat Profile Gift Enhancer' extension listed in your extensions.
-2. Verify it's enabled and visit the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page, you should see the byte-counter once you clicked on `Gif preview`.
+2. Verify it's enabled and visit the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page, you should see the byte-counter once you clicked on `Gift preview`.
 
 ### For Firefox (Developer Edition Only)
 
