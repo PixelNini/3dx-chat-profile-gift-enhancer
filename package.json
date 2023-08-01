@@ -2,13 +2,13 @@
     "name": "3dx-profile-gift-editor-enhancer",
     "extensionName": "3DX Chat - Profile / Gift Editor Enhancer",
     "description": "Enhance the amazing profile & gift editor by ColinDude",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "private": true,
     "scripts": {
         "build": "webpack --config webpack/webpack.config.js",
         "postinstall": "husky install"
     },
-    "license": "MIT",
+    "license": "CC0 1.0",
     "devDependencies": {
         "@commitlint/cli": "^17.6.7",
         "@commitlint/config-conventional": "^17.6.7",
