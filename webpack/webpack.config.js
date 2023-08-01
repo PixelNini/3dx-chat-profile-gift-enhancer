@@ -22,7 +22,7 @@ function generateEntryObj(srcPath) {
 function createCopyPlugin(patterns, replacements = {}) {
     return new CopyPlugin({
         patterns: patterns.map((pattern) => {
-            if (Object.keys(replacements).length > 0) {
+            if (Object.keys(replacements).length > 0 && pattern.transform) {
                 return {
                     ...pattern,
                     transform(content) {
@@ -90,6 +90,7 @@ module.exports = [
                 {
                     from: `public/${manifestFile}`,
                     to: 'manifest.json',
+                    transform: true
                 },
                 {
                     from: 'public',
