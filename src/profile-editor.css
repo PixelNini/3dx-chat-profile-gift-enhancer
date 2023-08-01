@@ -1,3 +1,11 @@
 .pe-warning {
     color: red;
 }
+
+.pe-hidden {
+    display: none;
+}
+
+.pe-block {
+    display: block!important;
+}
