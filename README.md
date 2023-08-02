@@ -49,7 +49,7 @@ The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-l
 
 ### For Firefox (Developer Edition Only)
 
-> **Note:** The Firefox version of this extension has not been tested and is not signed. Therefore, it can only be installed in the Firefox Developer Edition.
+> **Note:** The Firefox version of this extension is not signed. Therefore, it can only be installed in the Firefox Developer Edition.
 
 #### Step 1: Download the ZIP File
 
