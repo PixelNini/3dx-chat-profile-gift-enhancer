@@ -8,8 +8,8 @@ async function run(): Promise<void> {
 
     await render();
 
-    new MutationObserver(function(mutations) {
-        mutations.forEach(function() {
+    new MutationObserver(function (mutations) {
+        mutations.forEach(function () {
             inputValidation(textArea);
         });
     }).observe(characterCount, { childList: true });
@@ -30,25 +30,35 @@ async function render(): Promise<void> {
     bytesTitle.textContent = 'Bytes';
     bytesTitle.classList.add('pe-hidden');
 
+    let bytesMaxText = document.createElement('span');
+    let bytesText = document.createElement('span');
+
+    bytesCountWrapper.prepend(bytesMaxText);
+    bytesCountWrapper.prepend(bytesText);
+
     charCountWrapper.prepend(bytesCountWrapper);
     charCountWrapper.prepend(bytesTitle);
 
     document.addEventListener('byteSizeChanged', async (event: any) => {
         const maxBytesError = event.detail.bytes > event.detail.maxBytes;
 
-        !bytesTitle.classList.contains('pe-hidden') ? showBytesError(maxBytesError) : showBytesError(maxBytesError, false);
+        !bytesTitle.classList.contains('pe-hidden')
+            ? showBytesError(maxBytesError)
+            : showBytesError(maxBytesError, false);
 
-        bytesCountWrapper.innerHTML = `<span class='${maxBytesError ? 'pe-warning' : ''}'>
-        ${event.detail.bytes}</span> / ${event.detail.maxBytes}`;
+        maxBytesError ? bytesText.classList.add('pe-warning') : bytesText.classList.remove('pe-warning');
+
+        bytesText.textContent = event.detail.bytes;
+        bytesMaxText.textContent = ` / ${event.detail.maxBytes}`;
     });
 
-    new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if(mutation.attributeName === 'disabled') {
+    new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.attributeName === 'disabled') {
                 bytesTitle.classList.toggle('pe-hidden');
                 bytesCountWrapper.classList.toggle('pe-hidden');
             }
-        });    
+        });
     }).observe(giftButton, { attributes: true });
 }
 
@@ -66,7 +76,9 @@ async function showBytesError(maxBytesError: boolean, showError: boolean = true)
 
     maxBytesError && showError ? warningsWrapper.prepend(errorMessage) : errorMessage.remove();
 
-    warningsWrapper.contains(errorMessage) ? errorDialog.classList.add('pe-block') : errorDialog.classList.remove('pe-block');
+    warningsWrapper.contains(errorMessage)
+        ? errorDialog.classList.add('pe-block')
+        : errorDialog.classList.remove('pe-block');
 }
 
 async function inputValidation(textArea: HTMLTextAreaElement, maxBytes: number = 255): Promise<void> {
