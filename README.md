@@ -21,7 +21,7 @@ The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-l
 
 ## Official Releases
 
--   Chrome: - Review pending -
+-   Chrome: [https://chrome.google.com/webstore/detail/3dx-chat-profile-gift-edi/kfndddjjdnjkpfahoddjnkabbggpjcjl](https://chrome.google.com/webstore/detail/3dx-chat-profile-gift-edi/kfndddjjdnjkpfahoddjnkabbggpjcjl)
 -   Firefox: [https://addons.mozilla.org/en-US/firefox/addon/3dx-chat-profile-gift-editor-e/](https://addons.mozilla.org/en-US/firefox/addon/3dx-chat-profile-gift-editor-e/)
 
 ## Installation Guide (Local Installation Only !)
