@@ -12,11 +12,11 @@
     "devDependencies": {
         "@commitlint/cli": "^17.6.7",
         "@commitlint/config-conventional": "^17.6.7",
-        "@types/chrome": "^0.0.242",
+        "@types/chrome": "^0.0.243",
         "@types/webextension-polyfill": "^0.10.1",
         "copy-webpack-plugin": "^11.0.0",
         "husky": "^8.0.3",
-        "prettier": "^3.0.0",
+        "prettier": "^3.0.1",
         "ts-loader": "^9.4.4",
         "typescript": "^5.1.6",
         "webextension-polyfill": "^0.10.0",
