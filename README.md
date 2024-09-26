@@ -4,10 +4,12 @@ Below are instructions for installing the extension in Chrome and Firefox.
 
 ## What Does This Extension Do?
 
-The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-left corner of the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page. This functionality aims to address the following problem:
+The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-left corner of the [3DX Chat Profile Editor](https://status.3dxchat.net/profile-editor) page, along with a convenient color management feature for enhanced user experience.
 
--   The existing character count often does not provide an accurate reflection, especially when using custom fonts or symbols that can be larger than a single byte.
--   When pre-editing your gift in the editor with a custom font, you may still encounter issues when sending the gift in 3DX Chat even though you are within the allowed character range. This is because 3DX Chat imposes a byte limit of approximately 255. The extension's byte-counter ensures that your content will fit within this limit.
+### Key Features:
+
+-   **Byte Counter**: The existing character count often does not provide an accurate reflection when creating gifts, especially when using custom fonts or symbols that can be larger than a single byte. The extension’s byte-counter ensures that your gift content will fit within the 255-byte limit imposed by 3DX Chat.
+-   **Color Management**: Users can easily save their preferred colors while using the profile editor. The extension allows users to select colors using the color picker and save them for later use. Saved colors are displayed in a dedicated section titled "Saved Colors", making it effortless to access and use them as needed. Each saved color text is clickable, allowing quick selection, and users can remove colors from their saved list as required.
 
 ### Screenshots
 
@@ -18,6 +20,10 @@ The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-l
 #### Gift preview with custom fonts and with byte limit exceeded
 
 [ERROR](./demo/Screenshot%20-%20NOT%20OK.jpg)
+
+#### Saved Colors Feature
+
+![Saved Colors](./demo/Screenshot%20-%20Saved%20colors.jpg)
 
 ## Official Releases
 

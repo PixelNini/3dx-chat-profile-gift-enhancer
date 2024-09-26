@@ -7,5 +7,38 @@
 }
 
 .pe-block {
-    display: block!important;
+    display: block !important;
+}
+
+.color-save-button {
+    margin-left: 10px;
+}
+
+.saved-color-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: var(--color);
+    width: 100%;
+}
+
+.saved-color-text {
+    cursor: pointer;
+    flex-grow: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.delete-button {
+    cursor: pointer;
+    color: red;
+    margin-right: 48%;
+    flex-shrink: 0;
+}
+
+.no-colors-message {
+    font-style: italic;
 }
