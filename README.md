@@ -15,11 +15,11 @@ The 3DX Chat Profile Gift Enhancer extension adds a byte-counter to the bottom-l
 
 #### Gift preview with custom fonts and with byte limit in range
 
-[OK](./demo/Screenshot%20-%20OK.jpg)
+![OK](./demo/Screenshot%20-%20OK.jpg)
 
 #### Gift preview with custom fonts and with byte limit exceeded
 
-[ERROR](./demo/Screenshot%20-%20NOT%20OK.jpg)
+![ERROR](./demo/Screenshot%20-%20NOT%20OK.jpg)
 
 #### Saved Colors Feature
 
