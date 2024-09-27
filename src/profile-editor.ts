@@ -72,7 +72,7 @@ class ColorManager {
         const saveButton = document.createElement('button');
         saveButton.textContent = 'Save';
         saveButton.id = 'colorSaveButton';
-        saveButton.classList.add('color-save-button');
+        saveButton.classList.add('color-save-button', 'btn btn-secondary');
 
         this.colorPicker.insertAdjacentElement('afterend', saveButton);
 
