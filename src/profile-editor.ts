@@ -5,6 +5,7 @@ import { StorageHelper } from './storage-helper';
  * This script adds the ability to save colors, display saved colors,
  * and provides a byte counter for text area input.
  */
+
 const SELECTORS = {
     textArea: '#profileCodeForm > textarea',
     characterCount: '#characterCount',
@@ -32,142 +33,171 @@ interface ByteSizeChangedEventDetail {
 async function initialize(): Promise<void> {
     const textArea = document.querySelector<HTMLTextAreaElement>(SELECTORS.textArea);
     const characterCount = document.querySelector<HTMLElement>(SELECTORS.characterCount);
-    const colorPicker = document.querySelector<HTMLInputElement>(SELECTORS.colorPicker);
 
-    if (!textArea || !characterCount || !colorPicker) {
+    if (!textArea || !characterCount) {
         throw new Error('Required DOM elements not found');
     }
 
     const storageHelper = new StorageHelper('local');
     const savedColors: string[] = (await storageHelper.get<string[]>('savedColors')) || [];
 
-    const colorManager = new ColorManager(colorPicker, savedColors, storageHelper);
-    colorManager.init();
+    const savedColorsManager = new SavedColorsManager(savedColors, storageHelper);
+
+    // Initialize color pickers in the first modal box
+    const colorPicker = document.querySelector<HTMLInputElement>(SELECTORS.colorPicker);
+    if (colorPicker) {
+        const predefinedColorsHeader = document.querySelector<HTMLElement>(SELECTORS.predefinedColorsHeader);
+        const predefinedColorsList = predefinedColorsHeader?.nextElementSibling as HTMLElement;
+        if (predefinedColorsList) {
+            new ColorPickerWithSavedColors(
+                colorPicker,
+                savedColorsManager,
+                predefinedColorsList.parentElement as HTMLElement,
+                predefinedColorsList,
+            );
+        }
+    }
+
+    // Initialize color pickers in the second modal box
+    const colorPicker1 = document.querySelector<HTMLInputElement>('#colorPicker1');
+    const colorPicker2 = document.querySelector<HTMLInputElement>('#colorPicker2');
+
+    if (colorPicker1) {
+        new ColorPickerWithSavedColors(colorPicker1, savedColorsManager, colorPicker1.parentElement as HTMLElement);
+    }
+
+    if (colorPicker2) {
+        new ColorPickerWithSavedColors(colorPicker2, savedColorsManager, colorPicker2.parentElement as HTMLElement);
+    }
 
     const byteCounter = new ByteCounter(textArea, characterCount);
     byteCounter.init();
 }
 
-class ColorManager {
-    private colorPicker: HTMLInputElement;
+class SavedColorsManager {
     private savedColors: string[];
     private storageHelper: StorageHelper;
+    private listeners: Array<() => void>;
 
-    private savedColorsHeader: HTMLHeadingElement | null = null;
-    private savedColorsList: HTMLUListElement | null = null;
-    private noColorsMessage: HTMLParagraphElement | null = null;
-
-    constructor(colorPicker: HTMLInputElement, savedColors: string[], storageHelper: StorageHelper) {
-        this.colorPicker = colorPicker;
+    constructor(savedColors: string[], storageHelper: StorageHelper) {
         this.savedColors = savedColors;
         this.storageHelper = storageHelper;
+        this.listeners = [];
     }
 
-    public init(): void {
+    public getColors(): string[] {
+        return [...this.savedColors];
+    }
+
+    public async saveColor(color: string): Promise<void> {
+        if (!this.savedColors.includes(color)) {
+            this.savedColors.push(color);
+            await this.storageHelper.set('savedColors', this.savedColors);
+            this.notifyListeners();
+        }
+    }
+
+    public async deleteColor(index: number): Promise<void> {
+        this.savedColors.splice(index, 1);
+        await this.storageHelper.set('savedColors', this.savedColors);
+        this.notifyListeners();
+    }
+
+    public addListener(listener: () => void): void {
+        this.listeners.push(listener);
+    }
+
+    private notifyListeners(): void {
+        this.listeners.forEach((listener) => listener());
+    }
+}
+
+class ColorPickerWithSavedColors {
+    private colorPicker: HTMLInputElement;
+    private savedColorsManager: SavedColorsManager;
+    private container: HTMLElement;
+    private insertAfterElement?: HTMLElement;
+
+    private savedColorsHeader!: HTMLHeadingElement;
+    private savedColorsList!: HTMLUListElement;
+    private noColorsMessage!: HTMLParagraphElement;
+
+    constructor(
+        colorPicker: HTMLInputElement,
+        savedColorsManager: SavedColorsManager,
+        container: HTMLElement,
+        insertAfterElement?: HTMLElement,
+    ) {
+        this.colorPicker = colorPicker;
+        this.savedColorsManager = savedColorsManager;
+        this.container = container;
+        this.insertAfterElement = insertAfterElement;
+
+        this.init();
+    }
+
+    private init(): void {
         this.addSaveButton();
-        this.renderSavedColors();
+        this.createSavedColorsElements();
+        this.updateSavedColorsList();
+
+        this.savedColorsManager.addListener(() => {
+            this.updateSavedColorsList();
+        });
     }
 
     private addSaveButton(): void {
         const saveButton = document.createElement('button');
         saveButton.textContent = 'Save';
-        saveButton.id = 'colorSaveButton';
         saveButton.classList.add('color-save-button', 'btn', 'btn-secondary');
 
         this.colorPicker.insertAdjacentElement('afterend', saveButton);
 
         saveButton.addEventListener('click', async () => {
-            await this.saveColor(this.colorPicker.value);
+            await this.savedColorsManager.saveColor(this.colorPicker.value);
         });
     }
 
-    /**
-     * Saves a new color to storage and updates the saved colors list.
-     * @param color - The color value to save.
-     */
-    private async saveColor(color: string): Promise<void> {
-        if (!this.savedColors.includes(color)) {
-            this.savedColors.push(color);
-            await this.storageHelper.set('savedColors', this.savedColors);
-            this.renderSavedColors();
-        }
-    }
-
-    private renderSavedColors(): void {
-        const predefinedColorsHeader = document.querySelector<HTMLElement>(SELECTORS.predefinedColorsHeader);
-
-        if (!predefinedColorsHeader) {
-            console.error('Predefined colors header not found');
-            return;
-        }
-
-        const predefinedColorsList = predefinedColorsHeader.nextElementSibling as HTMLUListElement;
-        if (!predefinedColorsList || predefinedColorsList.tagName.toLowerCase() !== 'ul') {
-            console.error('Predefined colors list not found');
-            return;
-        }
-
-        if (!this.savedColorsHeader) {
-            this.createSavedColorsElements(predefinedColorsList);
-        }
-
-        if (this.savedColorsHeader && this.savedColorsList && this.noColorsMessage) {
-            this.updateSavedColorsList();
-        }
-    }
-
-    /**
-     * Creates the UI elements for displaying saved colors.
-     * @param predefinedColorsList - The existing list of predefined colors.
-     */
-    private createSavedColorsElements(predefinedColorsList: HTMLUListElement): void {
+    private createSavedColorsElements(): void {
         this.savedColorsHeader = document.createElement('h5');
-        this.savedColorsHeader.id = 'savedColorsHeader';
         this.savedColorsHeader.textContent = 'Saved colors';
 
         this.noColorsMessage = document.createElement('p');
-        this.noColorsMessage.id = 'noColorsMessage';
         this.noColorsMessage.textContent = 'No saved colors.';
         this.noColorsMessage.classList.add('no-colors-message');
 
         this.savedColorsList = document.createElement('ul');
-        this.savedColorsList.id = 'savedColorsList';
+        this.savedColorsList.classList.add('saved-colors-list');
 
-        predefinedColorsList.insertAdjacentElement('afterend', this.savedColorsHeader);
+        if (this.insertAfterElement) {
+            this.insertAfterElement.insertAdjacentElement('afterend', this.savedColorsHeader);
+        } else {
+            this.colorPicker.insertAdjacentElement('afterend', this.savedColorsHeader);
+        }
+
         this.savedColorsHeader.insertAdjacentElement('afterend', this.noColorsMessage);
         this.noColorsMessage.insertAdjacentElement('afterend', this.savedColorsList);
     }
 
-    /**
-     * Updates the saved colors list UI based on the current saved colors.
-     */
     private updateSavedColorsList(): void {
-        if (!this.savedColorsHeader || !this.savedColorsList || !this.noColorsMessage) {
-            return;
-        }
+        const savedColors = this.savedColorsManager.getColors();
 
         this.savedColorsList.innerHTML = '';
 
-        if (this.savedColors.length === 0) {
+        if (savedColors.length === 0) {
             this.noColorsMessage.style.display = 'block';
             this.savedColorsList.style.display = 'none';
         } else {
             this.noColorsMessage.style.display = 'none';
             this.savedColorsList.style.display = 'block';
 
-            this.savedColors.forEach((color, index) => {
+            savedColors.forEach((color, index) => {
                 const listItem = this.createSavedColorListItem(color, index);
-                this.savedColorsList!.appendChild(listItem);
+                this.savedColorsList.appendChild(listItem);
             });
         }
     }
 
-    /**
-     * Creates a list item element for a saved color.
-     * @param color - The color value.
-     * @param index - The index of the color in the saved colors array.
-     * @returns The created list item element.
-     */
     private createSavedColorListItem(color: string, index: number): HTMLLIElement {
         const li = document.createElement('li');
         li.classList.add('saved-color-item');
@@ -180,6 +210,8 @@ class ColorManager {
 
         colorText.addEventListener('click', () => {
             this.colorPicker.value = color;
+            this.colorPicker.dispatchEvent(new Event('input', { bubbles: true }));
+            this.colorPicker.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
         const deleteButton = document.createElement('span');
@@ -187,7 +219,7 @@ class ColorManager {
         deleteButton.classList.add('delete-button');
         deleteButton.addEventListener('click', async (event) => {
             event.stopPropagation();
-            await this.deleteColor(index);
+            await this.savedColorsManager.deleteColor(index);
         });
 
         li.appendChild(colorText);
@@ -195,19 +227,10 @@ class ColorManager {
 
         return li;
     }
-
-    /**
-     * Deletes a color from saved colors and updates the UI.
-     * @param index - The index of the color to delete.
-     */
-    private async deleteColor(index: number): Promise<void> {
-        this.savedColors.splice(index, 1);
-        await this.storageHelper.set('savedColors', this.savedColors);
-        this.renderSavedColors();
-    }
 }
 
 class ByteCounter {
+    // ByteCounter-Klasse bleibt unverändert
     private textArea: HTMLTextAreaElement;
     private characterCount: HTMLElement;
     private maxBytes: number = 255;
