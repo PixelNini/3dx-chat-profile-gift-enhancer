@@ -5,7 +5,6 @@ import { StorageHelper } from './storage-helper';
  * This script adds the ability to save colors, display saved colors,
  * and provides a byte counter for text area input.
  */
-
 const SELECTORS = {
     textArea: '#profileCodeForm > textarea',
     characterCount: '#characterCount',
@@ -43,31 +42,26 @@ async function initialize(): Promise<void> {
 
     const savedColorsManager = new SavedColorsManager(savedColors, storageHelper);
 
-    // Initialize color pickers in the first modal box
+    // Initialize color pickers in the color modal box
     const colorPicker = document.querySelector<HTMLInputElement>(SELECTORS.colorPicker);
     if (colorPicker) {
         const predefinedColorsHeader = document.querySelector<HTMLElement>(SELECTORS.predefinedColorsHeader);
         const predefinedColorsList = predefinedColorsHeader?.nextElementSibling as HTMLElement;
         if (predefinedColorsList) {
-            new ColorPickerWithSavedColors(
-                colorPicker,
-                savedColorsManager,
-                predefinedColorsList.parentElement as HTMLElement,
-                predefinedColorsList,
-            );
+            new ColorPickerWithSavedColors(colorPicker, savedColorsManager, predefinedColorsList);
         }
     }
 
-    // Initialize color pickers in the second modal box
+    // Initialize color pickers in the gradient modal box
     const colorPicker1 = document.querySelector<HTMLInputElement>('#colorPicker1');
     const colorPicker2 = document.querySelector<HTMLInputElement>('#colorPicker2');
 
     if (colorPicker1) {
-        new ColorPickerWithSavedColors(colorPicker1, savedColorsManager, colorPicker1.parentElement as HTMLElement);
+        new ColorPickerWithSavedColors(colorPicker1, savedColorsManager);
     }
 
     if (colorPicker2) {
-        new ColorPickerWithSavedColors(colorPicker2, savedColorsManager, colorPicker2.parentElement as HTMLElement);
+        new ColorPickerWithSavedColors(colorPicker2, savedColorsManager);
     }
 
     const byteCounter = new ByteCounter(textArea, characterCount);
@@ -115,7 +109,6 @@ class SavedColorsManager {
 class ColorPickerWithSavedColors {
     private colorPicker: HTMLInputElement;
     private savedColorsManager: SavedColorsManager;
-    private container: HTMLElement;
     private insertAfterElement?: HTMLElement;
 
     private savedColorsHeader!: HTMLHeadingElement;
@@ -125,21 +118,19 @@ class ColorPickerWithSavedColors {
     constructor(
         colorPicker: HTMLInputElement,
         savedColorsManager: SavedColorsManager,
-        container: HTMLElement,
         insertAfterElement?: HTMLElement,
     ) {
         this.colorPicker = colorPicker;
         this.savedColorsManager = savedColorsManager;
-        this.container = container;
         this.insertAfterElement = insertAfterElement;
 
         this.init();
     }
 
     private init(): void {
-        this.addSaveButton();
         this.createSavedColorsElements();
         this.updateSavedColorsList();
+        this.addSaveButton();
 
         this.savedColorsManager.addListener(() => {
             this.updateSavedColorsList();
@@ -160,6 +151,7 @@ class ColorPickerWithSavedColors {
 
     private createSavedColorsElements(): void {
         this.savedColorsHeader = document.createElement('h5');
+        this.savedColorsHeader.classList.add('saved-colors-header');
         this.savedColorsHeader.textContent = 'Saved colors';
 
         this.noColorsMessage = document.createElement('p');
@@ -201,7 +193,11 @@ class ColorPickerWithSavedColors {
     private createSavedColorListItem(color: string, index: number): HTMLLIElement {
         const li = document.createElement('li');
         li.classList.add('saved-color-item');
+        li.style.color = color;
         li.setAttribute('data-color', color);
+
+        const innerContainer = document.createElement('div');
+        innerContainer.classList.add('saved-color-item-inner-container');
 
         const colorText = document.createElement('span');
         colorText.classList.add('saved-color-text');
@@ -222,15 +218,15 @@ class ColorPickerWithSavedColors {
             await this.savedColorsManager.deleteColor(index);
         });
 
-        li.appendChild(colorText);
-        li.appendChild(deleteButton);
+        li.appendChild(innerContainer);
+        innerContainer.appendChild(colorText);
+        innerContainer.appendChild(deleteButton);
 
         return li;
     }
 }
 
 class ByteCounter {
-    // ByteCounter-Klasse bleibt unverändert
     private textArea: HTMLTextAreaElement;
     private characterCount: HTMLElement;
     private maxBytes: number = 255;

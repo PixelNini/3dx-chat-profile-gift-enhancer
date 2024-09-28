@@ -1,3 +1,7 @@
+.profilefont {
+    font-family: 'Arial', 'MS UI Gothic' !important;
+}
+
 .pe-warning {
     color: red;
 }
@@ -14,7 +18,15 @@
     margin-left: 10px;
 }
 
+.saved-colors-header {
+    margin-top: 10px;
+}
+
 .saved-color-item {
+    display: list-item;
+}
+
+.saved-color-item-inner-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +47,7 @@
 .delete-button {
     cursor: pointer;
     color: red;
-    margin-right: 48%;
+    margin-right: 50%;
     flex-shrink: 0;
 }
 
